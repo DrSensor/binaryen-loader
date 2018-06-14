@@ -1,16 +1,20 @@
 import { getOptions } from 'loader-utils';
-import validateOptions from '@webpack-contrib/schema-utils';
+import validate from '@webpack-contrib/schema-utils';
 
 import schema from './options.json';
 
-export const raw = true;
+export const raw = false;
 
 export default function loader(source) {
   const { version, webpack } = this;
 
   const options = getOptions(this) || {};
 
-  validateOptions(schema, options, 'Loader');
+  validate({
+    name: 'binaryen-loader',
+    schema,
+    target: options,
+  });
 
   const newSource = `
   /**
