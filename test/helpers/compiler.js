@@ -22,13 +22,7 @@ const modules = (config) => {
   };
 };
 
-const plugins = (config) =>
-  [
-    new webpack.optimize.CommonsChunkPlugin({
-      names: ['runtime'],
-      minChunks: Infinity,
-    }),
-  ].concat(config.plugins || []);
+const plugins = (config) => [].concat(config.plugins || []);
 
 const output = (config) => {
   return {

@@ -41,7 +41,7 @@
     "index.js"
   ],
   "peerDependencies": {
-    "webpack": "^4.3.0"
+    "webpack": "^4.12.0"
   },
   "dependencies": {
     "@webpack-contrib/schema-utils": "^1.0.0-beta.0",

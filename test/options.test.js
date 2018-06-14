@@ -11,7 +11,7 @@ describe('Options', () => {
       };
 
       const stats = await webpack('fixture.js', config);
-      const { source } = stats.toJson().modules[1];
+      const [{ source }] = stats.toJson().modules;
 
       expect(source).toMatchSnapshot();
     });
