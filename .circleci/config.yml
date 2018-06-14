@@ -177,16 +177,10 @@ workflows:
               only: /^v\d+[.]\d+[.]\d+$/
             branches:
               ignore: /.*/
-      - request-publish:
+      - publish:
           type: approval
           requires:
             - draft
-          filters:
-            tags:
-              only: /^v\d+[.]\d+[.]\d+$/
-      - publish:
-          requires:
-            - request-publish
           filters:
             tags:
               only: /^v\d+[.]\d+[.]\d+$/
