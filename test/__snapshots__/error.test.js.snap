@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Errors Loader Error 1`] = `"Cannot read property 'version' of undefined"`;
+
+exports[`Errors Validation Error 1`] = `
+"binaryen-loader
+
+  [4mOptions Validation Error[24m
+
+  [2moptions[22m['useRelativePath']  [34mis an invalid additional property[39m
+"
+`;
