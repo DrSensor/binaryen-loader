@@ -1,4 +1,5 @@
 import path from 'path';
+
 import del from 'del';
 import webpack from 'webpack';
 import MemoryFS from 'memory-fs';
@@ -41,7 +42,7 @@ const output = (config) => {
 };
 
 export default function(fixture, config, options) {
-  config = {
+  const cfg = {
     devtool: config.devtool || 'sourcemap',
     context: path.resolve(__dirname, '..', 'fixtures'),
     entry: `./${fixture}`,
@@ -50,13 +51,13 @@ export default function(fixture, config, options) {
     plugins: plugins(config),
   };
 
-  options = Object.assign({ output: false }, options);
+  const opts = Object.assign({ output: false }, options);
 
-  if (options.output) del.sync(config.output.path);
+  if (opts.output) del.sync(cfg.output.path);
 
-  const compiler = webpack(config);
+  const compiler = webpack(cfg);
 
-  if (!options.output) compiler.outputFileSystem = new MemoryFS();
+  if (!opts.output) compiler.outputFileSystem = new MemoryFS();
 
   return new Promise((resolve, reject) =>
     compiler.run((err, stats) => {
