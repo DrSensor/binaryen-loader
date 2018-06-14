@@ -89,7 +89,7 @@ jobs:
       - run:
           name: Validate Commit Messages
           command: npm run ci:lint:commits
-  publish:
+  draft:
     docker:
       - image: webpackcontrib/circleci-node-base:latest
     steps:
@@ -97,21 +97,43 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
+          name: set npm TOKEN
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+      - run:
           name: NPM Rebuild
           command: npm install
-      # - run:
-      #     name: Validate Commit Messages
-      #     command: npm run release:validate
+      - run:
+          name: Validate Commit Messages
+          command: npm run release:validate
+      - run:
+          name: Draft Releases to Github
+          command: npm run release:ci
+  publish:
+    docker:
+      - image: webpackcontrib/circleci-node-base:latest
+    steps:
+      - checkout
+      - run:
+          name: set npm TOKEN
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: NPM Rebuild
+          command: npm install
       - run:
           name: Publish to NPM
-          command: printf "noop running conventional-github-releaser"
+          command: npm publish
 
 version: 2.0
 workflows:
   version: 2
   validate-publish:
     jobs:
-      - dependency_cache
+      - dependency_cache:
+          filters:
+            tags:
+              only: /.*/
       - node6-latest:
           requires:
             - dependency_cache
@@ -145,12 +167,26 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - publish:
+      - draft:
           requires:
             - node8-latest
             - node8-canary
             - node10-latest
           filters:
+            tags:
+              only: /^v\d+[.]\d+[.]\d+$/
             branches:
-              only:
-                - master
+              ignore: /.*/
+      - request-publish:
+          type: approval
+          requires:
+            - draft
+          filters:
+            tags:
+              only: /^v\d+[.]\d+[.]\d+$/
+      - publish:
+          requires:
+            - request-publish
+          filters:
+            tags:
+              only: /^v\d+[.]\d+[.]\d+$/
