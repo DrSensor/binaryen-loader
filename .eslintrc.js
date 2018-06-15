@@ -7,6 +7,7 @@ module.exports = {
       'error',
       { singleQuote: true, trailingComma: 'es5', arrowParens: 'always' },
     ],
-    'prefer-destructuring': ['error', {'object': true, 'array': false}]
+    'prefer-destructuring': ['error', {'object': true, 'array': false}],
+    'line-comment-position': ['off'],
   },
 };

@@ -1,30 +1,28 @@
+import assert from 'assert';
+
 import { getOptions } from 'loader-utils';
 import validate from '@webpack-contrib/schema-utils';
+import { readBinary, setDebugInfo } from 'binaryen';
 
 import schema from './options.json';
 
-export const raw = false;
+export const raw = true;
 
 export default function loader(source) {
-  const { version, webpack } = this;
+  assert(source instanceof Buffer); // ⬅️ verify if the loaded source is binary file
 
-  const options = getOptions(this) || {};
+  const wasmModule = readBinary(source);
+  const options = getOptions(this) || {}; // ⬅️ empty object for "if-able"
 
   validate({
     name: 'binaryen-loader',
-    schema,
+    schema, // ⬅ ️validate options using JSON-schema in options.json
     target: options,
   });
 
-  const newSource = `
-  /**
-   * Loader API Version: ${version}
-   * Is this in "webpack mode": ${webpack}
-   */
-  /**
-   * Original Source From Loader
-   */
-  ${source}`;
+  // `..|| false` since docs not clear enough about the default value
+  setDebugInfo(options.debug || false);
+  wasmModule.optimize();
 
-  return `${newSource}`;
+  return wasmModule.emitBinary();
 }
