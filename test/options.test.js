@@ -1,6 +1,6 @@
 import webpack from './helpers/compiler';
 
-describe('Options', () => {
+describe.skip('Options', () => {
   describe('name', () => {
     test('{Boolean}', async () => {
       const config = {
