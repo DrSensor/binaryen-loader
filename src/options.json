@@ -1,9 +1,39 @@
 {
   "type": "object",
-  "properties": {
-    "debug": {
-      "type": "boolean"
+  "definitions": {
+    "level": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2
+    },
+    "transformation": {
+      "type": "object",
+      "properties": {
+        "passes": {
+          "anyOf": [
+            { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+            { "type": "string" }
+          ]
+        }
+      },
+      "additionalProperties": false
     }
+  },
+  "properties": {
+    "optimization": {
+      "type": "object",
+      "properties": {
+        "level": { "$ref": "#/definitions/level" },
+        "shrinkLevel": { "$ref": "#/definitions/level" }
+      },
+      "additionalProperties": false
+    },
+    "transformation": {
+      "anyOf": [
+        { "$ref": "#/definitions/transformation" }
+      ]
+    },
+    "debug": { "type": "boolean" }
   },
   "additionalProperties": false
 }
