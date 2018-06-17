@@ -1,4 +1,5 @@
 import webpack from './helpers/compiler';
+import on from './helpers/on';
 
 describe('Loader', () => {
   describe('Defaults', () => {
@@ -10,38 +11,22 @@ describe('Loader', () => {
 
     test('match snapshots', async () => {
       const stats = await webpack('fixture.js', config);
-      for (const { source } of stats.toJson().modules)
-        expect(source).toMatchSnapshot();
+      on(stats).source.toMatchSnapshot();
     });
 
     test('indeed from rust code', async () => {
       const stats = await webpack('fixture.js', config);
-      stats
-        .toJson()
-        .modules.filter(({ name }) => name.includes('.rust.wasm'))
-        .forEach(({ providedExports }) =>
-          expect(providedExports).toContain('rust_eh_personality')
-        );
+      on(stats).withExtension('.rust.wasm').providedExports.toContain('rust_eh_personality');
     });
 
     test('not from rust code', async () => {
       const stats = await webpack('fixture.js', config);
-      stats
-        .toJson()
-        .modules.filter(({ name }) => !name.includes('.rust.wasm'))
-        .forEach(({ providedExports }) =>
-          expect(providedExports).not.toContain('rust_eh_personality')
-        );
+      on(stats).withoutExtension('.rust.wasm').providedExports.not.toContain('rust_eh_personality');
     });
 
     test('all wasm must specify the allocated memory', async () => {
       const stats = await webpack('fixture.js', config);
-      stats
-        .toJson()
-        .modules.filter(({ name }) => name.includes('.wasm'))
-        .forEach(({ providedExports }) =>
-          expect(providedExports).toContain('memory')
-        );
+      on(stats).withExtension('.wasm').providedExports.toContain('memory');
     });
   });
 });
