@@ -28,5 +28,10 @@ describe('Loader', () => {
       const stats = await webpack('fixture.js', config);
       on(stats).withExtension('.wasm').providedExports.toContain('memory');
     });
+
+    test('size must be equal or smaller', async () => {
+      const stats = await webpack('fixture.js', config);
+      on(stats).withExtension('.wasm').size.toBeLessThanOrEqual(_ => _.originSize);
+    });
   });
 });

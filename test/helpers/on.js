@@ -4,48 +4,54 @@ import { resolve, dirname } from 'path';
 // TODO: test approximate size (need ability to convert Unit, e.g kb to KB)
 
 function inLoopExpect(array, prop, isNot = false) {
+  // #region sphagetti helpers 😋 (need Typescript!!!)
+  const an = (expected, stat) => typeof expected === 'function' ? expected(stat) : expected;
+  const call = (func, expected) => {
+    if (expected) {
+      for (const element of array) {
+        if (isNot) {
+          if (prop) expect(element[prop]).not[func](an(expected, element));
+          else expect(element).not[func](an(expected, element));
+        } else if (prop) expect(element[prop])[func](an(expected, element));
+        else expect(element)[func](an(expected, element));
+      }
+    } else {
+      for (const element of array) {
+        if (isNot) {
+          if (prop) expect(element[prop]).not[func]();
+          else expect(element).not[func]();
+        } else if (prop) expect(element[prop])[func]();
+        else expect(element)[func]();
+      }
+    }
+  };
+  // #endregion
+
   return {
-    get not() {
-      return inLoopExpect(array, prop, true);
-    },
-
-    toContain(expected) {
-      for (const element of array) {
-        if (isNot) {
-          if (prop) expect(element[prop]).not.toContain(expected);
-          else expect(element).not.toContain(expected);
-        } else if (prop) expect(element[prop]).toContain(expected);
-        else expect(element).toContain(expected);
-      }
-    },
-
-    toBeLessThan(expected) {
-      for (const element of array) {
-        if (isNot) {
-          if (prop) expect(element[prop]).not.toBeLessThan(expected);
-          else expect(element).not.toBeLessThan(expected);
-        } else if (prop) expect(element[prop]).toBeLessThan(expected);
-        else expect(element).toBeLessThan(expected);
-      }
-    },
-
-    toMatchSnapshot() {
-      for (const element of array) {
-        if (isNot) {
-          if (prop) expect(element[prop]).not.toMatchSnapshot();
-          else expect(element).not.toMatchSnapshot();
-        } else if (prop) expect(element[prop]).toMatchSnapshot();
-        else expect(element).toMatchSnapshot();
-      }
-    },
+    get not() { return inLoopExpect(array, prop, true) },
+    toContain: expected => call('toContain', expected),
+    toBeLessThan: expected => call('toBeLessThan', expected),
+    toBeLessThanOrEqual: expected => call('toBeLessThanOrEqual', expected),
+    toBeGreaterThan: expected => call('toBeGreaterThan', expected),
+    toBeGreaterThanOrEqual: expected => call('toBeGreaterThanOrEqual', expected),
+    toMatchSnapshot: () => call('toMatchSnapshot'),
   };
 }
 
+/* eslint no-dupe-keys: "off", no-param-reassign: "off"*/
 function chainer(statModules) {
+  statModules.forEach(stat => {
+    const { issuer, name } = stat;
+    stat.originSize = issuer ? statSync(resolve(dirname(issuer), name)).size : null;
+  });
+
   return {
+    get get() { return statModules },
+
     get: prop => inLoopExpect(statModules, prop),
     get source() { return inLoopExpect(statModules, 'source') },
     get providedExports() { return inLoopExpect(statModules, 'providedExports') },
+    get size() { return inLoopExpect(statModules, 'size') },
 
     get originSize() {
       return inLoopExpect(
@@ -53,17 +59,8 @@ function chainer(statModules) {
       );
     },
 
-    withExtension(extension) {
-      return chainer(
-        statModules.filter(({ name }) => name.includes(extension))
-      );
-    },
-
-    withoutExtension(extension) {
-      return chainer(
-        statModules.filter(({ name }) => !name.includes(extension))
-      );
-    },
+    withExtension: extension => chainer(statModules.filter(({ name }) => name.includes(extension))),
+    withoutExtension: extension => chainer(statModules.filter(({ name }) => !name.includes(extension))),
   };
 }
 
