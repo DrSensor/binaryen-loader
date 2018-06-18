@@ -12,7 +12,7 @@ module.exports = {
     'line-comment-position': ['off'],
   },
   overrides: [{
-    files: ['*.test.*', 'on.js'],
+    files: ['*.test.*', 'on.js', 'common-tests.js'],
     rules: {
       'semi': ['error', 'always', { 'omitLastInOneLineBlock': true }],
       'quotes': ['error', 'single'],

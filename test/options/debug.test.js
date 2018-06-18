@@ -1,31 +1,11 @@
 import webpack from '../helpers/compiler';
 import on from '../helpers/on';
 
+import commonTest from '../common-tests';
+
 describe('Options', () => {
   describe('debug', () => {
     describe('{Boolean}', () => {
-      const globalTests = config => {
-        test('match snapshots', async () => {
-          const stats = await webpack('fixture.js', config);
-          on(stats).source.toMatchSnapshot();
-        });
-
-        test('rust_eh_personality still exist in rust code', async () => {
-          const stats = await webpack('fixture.js', config);
-          on(stats).withExtension('.rust.wasm').providedExports.toContain('rust_eh_personality');
-        });
-
-        test('rust_eh_personality not found in non-rust code', async () => {
-          const stats = await webpack('fixture.js', config);
-          on(stats).withoutExtension('.rust.wasm').providedExports.not.toContain('rust_eh_personality');
-        });
-
-        test('all wasm must specify the allocated memory', async () => {
-          const stats = await webpack('fixture.js', config);
-          on(stats).withExtension('.wasm').providedExports.toContain('memory');
-        });
-      };
-
       describe('True', () => {
         const config = {
           loader: {
@@ -36,7 +16,7 @@ describe('Options', () => {
           },
         };
 
-        globalTests(config);
+        commonTest(config);
 
         test('.wasm < 5kB, size must be about |originSize +/- 150B|', async () => {
           const stats = await webpack('fixture.js', config);
@@ -63,7 +43,7 @@ describe('Options', () => {
           },
         };
 
-        globalTests(config);
+        commonTest(config);
 
         test('size must be equal or smaller', async () => {
           const stats = await webpack('fixture.js', config);
