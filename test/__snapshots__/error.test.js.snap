@@ -1,5 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`Errors Loader Error 1`] = `"false == true"`;
-
-exports[`Errors Validation Error 1`] = `"false == true"`;

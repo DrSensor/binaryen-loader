@@ -65,5 +65,5 @@ export default function loader(source) {
   setDebugInfo(options.debug || false);
   wasmModule.optimize();
 
-  return Buffer(wasmModule.emitBinary());
+  return Buffer.from(wasmModule.emitBinary());
 }
