@@ -59,6 +59,7 @@ function chainer(statModules) {
       );
     },
 
+    with: filter => chainer(statModules.filter(filter)),
     withExtension: extension => chainer(statModules.filter(({ name }) => name.includes(extension))),
     withoutExtension: extension => chainer(statModules.filter(({ name }) => !name.includes(extension))),
   };
