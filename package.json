@@ -31,8 +31,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --collectCoverageFrom='src/**/*.js' --coverage",
     "ci:lint": "npm run lint && npm run security",
-    "ci:test": "npm run test -- --runInBand --silent",
-    "ci:coverage": "npm run test:coverage -- --runInBand --silent",
+    "ci:test": "npm run test -- --runInBand --silent --ci",
+    "ci:coverage": "npm run test:coverage -- --runInBand --silent --ci",
     "defaults": "defaults"
   },
   "files": [
