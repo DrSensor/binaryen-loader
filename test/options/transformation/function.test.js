@@ -11,14 +11,11 @@ describe('Options', () => {
           on(stats).withExtension('.wasm').providedExports.toBeNull();
         });
 
-        test('size of wasm from s-expression can be bigger', async () => {
+        test('size is about 1.2kB to 1.6kB', async () => {
           const stats = await webpack(fixture, config);
-          on(stats).withExtension('wat.wasm').size.toBeGreaterThanOrEqual(_ => _.originSize);
-        });
-
-        test('size of wasm from rust code must be equal or smaller', async () => {
-          const stats = await webpack(fixture, config);
-          on(stats).withExtension('rs.wasm').size.toBeLessThanOrEqual(_ => _.originSize);
+          const given = on(stats).withExtension('.wasm');
+          given.size.toBeGreaterThan(1200);
+          given.size.toBeLessThan(1600);
         });
       }
 
