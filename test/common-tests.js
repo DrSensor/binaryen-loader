@@ -5,7 +5,7 @@ export default (config, fixture='fixture.js') => {
   test('match snapshots', async () => {
     const stats = await webpack(fixture, config);
     on(stats).source.toMatchSnapshot();
-  });
+  }, 8000);
 
   test('indeed from rust code', async () => {
     const stats = await webpack(fixture, config);
