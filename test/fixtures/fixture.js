@@ -1,6 +1,6 @@
-import unsafeArithmatic from './arithmatic.wat.wasm'; // ⬅️ size mustn't change after optimization
-import matrix from './algebra_matrix2x2.rust.wasm'; // ⬅️ for testing heavy optimization
-import arithmatic from './arithmatic.rust.wasm';
+import unsafeArithmatic from './arithmatic.wat.wasm'; // ⬅️ ideal size
+import matrix from './algebra_matrix2x2.rs.wasm'; // ⬅️ for testing heavy optimization
+import arithmatic from './arithmatic.rs.wasm';
 
 export default {
   unsafeArithmatic,

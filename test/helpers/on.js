@@ -4,7 +4,7 @@ import { resolve, dirname } from 'path';
 // TODO: test approximate size (need ability to convert Unit, e.g kb to KB)
 
 function inLoopExpect(array, prop, isNot = false) {
-  // #region sphagetti helpers 😋 (need Typescript!!!)
+  // #region sphagetti helpers 😋 (I need Typescript!!!)
   const an = (expected, stat) => typeof expected === 'function' ? expected(stat) : expected;
   const call = (func, expected) => {
     if (expected) {
@@ -35,6 +35,7 @@ function inLoopExpect(array, prop, isNot = false) {
     toBeGreaterThan: expected => call('toBeGreaterThan', expected),
     toBeGreaterThanOrEqual: expected => call('toBeGreaterThanOrEqual', expected),
     toMatchSnapshot: () => call('toMatchSnapshot'),
+    toBeNull: () => call('toBeNull'),
   };
 }
 
