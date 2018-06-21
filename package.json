@@ -1,14 +1,13 @@
 {
   "name": "binaryen-loader",
   "version": "0.1.0",
-  "description": "loader to reduce wasm code size based on Binaryen",
+  "description": "A webpack loader to reduce WebAssembly file binary size, based on Binaryen",
   "license": "MIT",
   "repository": "DrSensor/binaryen-loader",
   "author": "Fahmi Akbar Wildana",
   "homepage": "https://github.com/DrSensor/binaryen-loader",
   "bugs": "https://github.com/DrSensor/binaryen-loader/issues",
-  "bin": "",
-  "main": "index.js",
+  "main": "dist/cjs.js",
   "engines": {
     "node": ">= 6.9.0 <7.0.0 || >= 8.9.0"
   },
@@ -37,8 +36,7 @@
   },
   "files": [
     "dist/",
-    "lib/",
-    "index.js"
+    "lib/"
   ],
   "peerDependencies": {
     "webpack": "^4.0.0"
