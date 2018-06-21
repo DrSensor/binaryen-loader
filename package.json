@@ -1,6 +1,6 @@
 {
   "name": "binaryen-loader",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A webpack loader to reduce WebAssembly file binary size, based on Binaryen",
   "license": "MIT",
   "repository": "DrSensor/binaryen-loader",
